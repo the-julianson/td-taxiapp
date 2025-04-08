@@ -2,9 +2,9 @@
 
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer # new
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-
+from .models import Trip
 
 class UserSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(write_only=True)
@@ -42,3 +42,12 @@ class LoginSerializer(TokenObtainPairSerializer):
             if key != 'id':
                 token[key] = value
         return token
+
+
+class TripSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Trip
+        fields = (
+            'id', 'pick_up_address', 'drop_off_address', 'status', 'created', 'updated',
+        )
+        read_only_fields = ('id', 'created', 'updated',)
