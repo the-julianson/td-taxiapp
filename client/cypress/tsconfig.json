@@ -3,13 +3,10 @@
       "allowJs": true,
       "baseUrl": "../node_modules",
       "types": ["cypress"],
-      "target": "es6", 
-      "moduleResolution": "node", 
-      "esModuleInterop": true 
+      "noEmit": true
     },
     "include": [
-        "**/*.*",
-        "cypress/**/*.ts", 
-        "cypress/**/*.js"
+        "**/*.ts",
+        "**/*.js"
     ]
-  }
+}

@@ -31,4 +31,4 @@ describe('Navigation', function () {
     cy.get('a').contains('Sign up').click();
     cy.hash().should('eq', '#/sign-up');
   });
-});0
+});
