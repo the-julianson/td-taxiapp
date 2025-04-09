@@ -204,19 +204,27 @@ class TestWebSocket:
 
         await communicator.disconnect()
 
-    async def test_join_trip_group_on_connect(self, settings):
+    @pytest.mark.parametrize("user_type, trip_field", [
+        ("rider", "rider"),
+        ("driver", "driver")
+    ])
+    async def test_user_join_trip_group_on_connect(self, settings, user_type, trip_field):
         settings.CHANNEL_LAYERS = TEST_CHANNEL_LAYERS
         user, access = await create_user(
-            'test.user@example.com', 'pAssw0rd', 'rider'
+            'test.user@example.com', 'pAssw0rd', user_type
         )
-        trip = await create_trip(rider=user)
+        
+        # Create trip with the appropriate field set
+        trip_kwargs = {trip_field: user}
+        trip = await create_trip(**trip_kwargs)
+        
         communicator = WebsocketCommunicator(
             application=application,
             path=f'/taxi/?token={access}'
         )
         connected, _ = await communicator.connect()
-
-        # Send a message to the trip group.
+        
+        # Send a message to the trip group
         message = {
             'type': 'echo.message',
             'data': 'This is a test message.',
@@ -224,7 +232,7 @@ class TestWebSocket:
         channel_layer = get_channel_layer()
         await channel_layer.group_send(f'{trip.id}', message=message)
 
-        # Rider receives message.
+        # User receives message
         response = await communicator.receive_json_from()
         assert response == message
 
