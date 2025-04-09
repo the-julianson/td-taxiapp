@@ -12,7 +12,7 @@ class User(AbstractUser):
     pass
 
 
-class Trip(models.Model): # new
+class Trip(models.Model):
     REQUESTED = 'REQUESTED'
     STARTED = 'STARTED'
     IN_PROGRESS = 'IN_PROGRESS'

@@ -11,7 +11,7 @@ from trips.models import Trip
 
 PASSWORD = 'pAssw0rd!'
 
-def create_user(username='user@example.com', password=PASSWORD): # new
+def create_user(username='user@example.com', password=PASSWORD):
     return get_user_model().objects.create_user(
         username=username,
         first_name='Test',
@@ -35,7 +35,7 @@ class AuthenticationTest(APITestCase):
         self.assertEqual(response.data['first_name'], user.first_name)
         self.assertEqual(response.data['last_name'], user.last_name)
 
-    def test_user_can_log_in(self): # new
+    def test_user_can_log_in(self):
         user = create_user()
         response = self.client.post(reverse('log_in'), data={
             'username': user.username,
