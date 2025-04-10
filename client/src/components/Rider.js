@@ -1,12 +1,44 @@
 // client/src/components/Rider.js
 
-import React from 'react';
-import { Breadcrumb, Card } from 'react-bootstrap';
+import React, { useEffect, useState, useMemo } from 'react';
+import { Breadcrumb } from 'react-bootstrap';
 import { Navigate } from 'react-router-dom';
 
 import { isRider } from '../services/AuthService';
+import { getTrips } from '../services/TripService';
+
+import TripCard from './TripCard';
 
 function Rider(props) {
+  const [trips, setTrips] = useState([]);
+
+  const getCurrentTrips = useMemo(() => {
+    return trips.filter((trip) => {
+      return (
+        trip.driver !== null &&
+        trip.status !== 'REQUESTED' &&
+        trip.status !== 'COMPLETED'
+      );
+    });
+  }, [trips]);
+
+  const getCompletedTrips = useMemo(() => {
+    return trips.filter((trip) => {
+      return trip.status === 'COMPLETED';
+    });
+  }, [trips]);
+
+  useEffect(() => {
+    const loadTrips = async () => {
+      const { response, isError } = await getTrips();
+      if (isError) {
+        setTrips([]);
+      } else {
+        setTrips(response.data);
+      }
+    };
+    loadTrips();
+  }, []);
   if (!isRider()) {
     return <Navigate to="/" />;
   }
@@ -16,14 +48,18 @@ function Rider(props) {
         <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
         <Breadcrumb.Item active>Dashboard</Breadcrumb.Item>
       </Breadcrumb>
-      <Card className="mb-3">
-        <Card.Header>Current Trip</Card.Header>
-        <Card.Body>No trips.</Card.Body>
-      </Card>
-      <Card className="mb-3">
-        <Card.Header>Recent Trips</Card.Header>
-        <Card.Body>No trips.</Card.Body>
-      </Card>
+      <TripCard
+        title="Current Trip"
+        trips={getCurrentTrips}
+        group="rider"
+        otherGroup="driver"
+      />
+      <TripCard
+        title="Recent Trips"
+        trips={getCompletedTrips}
+        group="rider"
+        otherGroup="driver"
+      />
     </>
   );
 }
