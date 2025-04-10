@@ -13,6 +13,12 @@ import SignUp from './components/SignUp';
 import Driver from './components/Driver';
 import Rider from './components/Rider';
 
+import DriverDashboard from './components/DriverDashboard';
+import DriverDetail from './components/DriverDetail';
+
+import RiderDashboard from './components/RiderDashboard';
+import RiderDetail from './components/RiderDetail';
+
 import './App.css';
 
 function App() {
@@ -50,7 +56,14 @@ function App() {
           element={<LogIn isLoggedIn={isLoggedIn} logIn={logIn} />}
         />
         <Route path="rider" element={<Rider />} />
-        <Route path="driver" element={<Driver />} />
+        <Route path="rider" element={<Rider />}>
+          <Route index element={<RiderDashboard />} />
+          <Route path=":id" element={<RiderDetail />} />
+        </Route>
+        <Route path="driver" element={<Driver />}>
+          <Route index element={<DriverDashboard />} />
+          <Route path=":id" element={<DriverDetail />} />
+        </Route>
       </Route>
     </Routes>
   );
