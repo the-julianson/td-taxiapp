@@ -5,10 +5,25 @@ import { Navigate } from 'react-router-dom';
 
 import { isDriver } from '../services/AuthService';
 import TripCard from './TripCard';
-import { getTrips } from '../services/TripService';
+import { getTrips, connect, messages } from '../services/TripService';
 
 function Driver(props) {
   const [trips, setTrips] = useState([]);
+
+  useEffect(() => {
+    connect();
+    const subscription = messages.subscribe((message) => {
+      setTrips((prevTrips) => [
+        ...prevTrips.filter((trip) => trip.id !== message.data.id),
+        message.data,
+      ]);
+    });
+    return () => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    };
+  }, [setTrips]);
 
   useEffect(() => {
     const loadTrips = async () => {

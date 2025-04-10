@@ -1,5 +1,6 @@
 // client/cypress/e2e/driver.cy.js
 
+const { webSocket } = require('rxjs/webSocket');
 const faker = require('faker');
 
 // changed
@@ -149,5 +150,45 @@ describe('The driver dashboard', function () {
     cy.get('[data-cy=trip-card]')
       .should('have.length', 1)
       .and('contain.text', 'STARTED');
+  });
+
+  it('Can receive a ride request', function () {
+    cy.intercept('trip', {
+      statusCode: 200,
+      body: [],
+    }).as('getTrips');
+
+    cy.logIn(driverEmail);
+
+    cy.visit('/#/driver');
+    cy.wait('@getTrips');
+
+    // Requested trips.
+    cy.get('[data-cy=trip-card]').eq(1).contains('No trips.');
+
+    // Make trip request as rider.
+    cy.request({
+      method: 'POST',
+      url: 'http://localhost:8003/api/log_in/',
+      body: {
+        username: riderEmail,
+        password: 'pAssw0rd',
+      },
+    }).then((response) => {
+      const token = response.body.access;
+      const ws = webSocket(`ws://localhost:8003/taxi/?token=${token}`);
+      ws.subscribe();
+      ws.next({
+        type: 'create.trip',
+        data: {
+          pick_up_address: '123 Main Street',
+          drop_off_address: '456 Elm Street',
+          rider: 2,
+        },
+      });
+    });
+
+    // Requested trips.
+    cy.get('[data-cy=trip-card]').eq(1).contains('REQUESTED');
   });
 });
