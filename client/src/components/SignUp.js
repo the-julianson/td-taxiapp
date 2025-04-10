@@ -1,14 +1,14 @@
-import React, { useState } from 'react'
-import { Formik } from 'formik'
-import { Breadcrumb, Button, Card, Form } from 'react-bootstrap'
-import { Link, Navigate } from 'react-router-dom'
+import React, { useState } from 'react';
+import { Formik } from 'formik';
+import { Breadcrumb, Button, Card, Form } from 'react-bootstrap';
+import { Link, Navigate } from 'react-router-dom';
 
 function SignUp(props) {
-  const [isSubmitted, setSubmitted] = useState(false)
-  const onSubmit = (values, actions) => setSubmitted(true)
+  const [isSubmitted, setSubmitted] = useState(false);
+  const onSubmit = (values, actions) => setSubmitted(true);
 
-  if (isSubmitted) {
-    return <Navigate to="/log-in" />
+  if (props.isLoggedIn || isSubmitted) {
+    return <Navigate to="/log-in" />;
   }
   return (
     <>
@@ -99,7 +99,7 @@ function SignUp(props) {
         </Card.Body>
       </Card>
     </>
-  )
+  );
 }
 
-export default SignUp
+export default SignUp;

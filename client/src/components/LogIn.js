@@ -1,17 +1,23 @@
 // client/src/components/LogIn.js
 
-import React, { useState } from 'react'
-import { Formik } from 'formik'
-import { Breadcrumb, Button, Card, Form } from 'react-bootstrap'
-import { Link, Navigate } from 'react-router-dom'
+import React, { useState } from 'react';
+import { Formik } from 'formik';
+import { Breadcrumb, Button, Card, Form } from 'react-bootstrap';
+import { Link, Navigate } from 'react-router-dom';
 
-// changed
 function LogIn(props) {
-  const [isSubmitted, setSubmitted] = useState(false)
-  const onSubmit = (values, actions) => setSubmitted(true)
+  const [isSubmitted, setSubmitted] = useState(false);
+  const onSubmit = async (values, actions) => {
+    try {
+      await props.logIn(values.username, values.password);
+      setSubmitted(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-  if (isSubmitted) {
-    return <Navigate to="/" />
+  if (props.isLoggedIn || isSubmitted) {
+    return <Navigate to="/" />;
   }
   return (
     <>
@@ -62,7 +68,7 @@ function LogIn(props) {
         </Card.Body>
       </Card>
     </>
-  )
+  );
 }
 
-export default LogIn
+export default LogIn;
