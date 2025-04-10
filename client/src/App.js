@@ -10,6 +10,9 @@ import Landing from './components/Landing';
 import LogIn from './components/LogIn';
 import SignUp from './components/SignUp';
 
+import Driver from './components/Driver';
+import Rider from './components/Rider';
+
 import './App.css';
 
 function App() {
@@ -46,6 +49,8 @@ function App() {
           path="log-in"
           element={<LogIn isLoggedIn={isLoggedIn} logIn={logIn} />}
         />
+        <Route path="rider" element={<Rider />} />
+        <Route path="driver" element={<Driver />} />
       </Route>
     </Routes>
   );

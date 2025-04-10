@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
-const faker = require('faker');
+export const faker = require('faker');
 
-const randomEmail = faker.internet.email();
+export const randomEmail = faker.internet.email();
 
 const logIn = () => {
   const { password } = Cypress.env('credentials');
