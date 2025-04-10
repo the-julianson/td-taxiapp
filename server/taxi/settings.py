@@ -41,11 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.postgres',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'trips',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -166,3 +168,7 @@ SIMPLE_JWT = {
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = Path(BASE_DIR / 'media')
+
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:3001",
+]
