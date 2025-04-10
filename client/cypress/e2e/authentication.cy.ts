@@ -78,4 +78,13 @@ describe('Authentication', function () {
     );
     cy.hash().should('eq', '#/log-in');
   });
+  it('Can log out.', function () {
+    logIn();
+    cy.get('[data-cy="logOut"]')
+      .click()
+      .should(() => {
+        expect(window.localStorage.getItem('taxi.auth')).to.be.null;
+      });
+    cy.get('[data-cy="logOut"]').should('not.exist');
+  });
 });
