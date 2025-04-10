@@ -7,6 +7,8 @@ import { isDriver } from '../services/AuthService';
 import TripCard from './TripCard';
 import { getTrips, connect, messages } from '../services/TripService';
 
+import { toast } from 'react-toastify';
+
 function Driver(props) {
   const [trips, setTrips] = useState([]);
 
@@ -17,6 +19,7 @@ function Driver(props) {
         ...prevTrips.filter((trip) => trip.id !== message.data.id),
         message.data,
       ]);
+      updateToast(message.data);
     });
     return () => {
       if (subscription) {
@@ -36,6 +39,13 @@ function Driver(props) {
     };
     loadTrips();
   }, []);
+
+  const updateToast = (trip) => {
+    const riderName = `${trip.rider.first_name} ${trip.rider.last_name}`;
+    if (trip.driver === null) {
+      toast.info(`${riderName} has requested a trip.`);
+    }
+  };
 
   const getCurrentTrips = useMemo(() => {
     return trips.filter((trip) => {

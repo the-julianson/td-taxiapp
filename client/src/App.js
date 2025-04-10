@@ -15,12 +15,16 @@ import { isRider } from './services/AuthService';
 import Driver from './components/Driver';
 import Rider from './components/Rider';
 
+import { ToastContainer } from 'react-toastify';
+
 import DriverDashboard from './components/DriverDashboard';
 import DriverDetail from './components/DriverDetail';
 
 import RiderDashboard from './components/RiderDashboard';
 import RiderDetail from './components/RiderDetail';
 import RiderRequest from './components/RiderRequest';
+
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
 function App() {
@@ -102,6 +106,7 @@ function Layout({ isLoggedIn, logOut }) {
       <Container className="pt-3">
         <Outlet />
       </Container>
+      <ToastContainer />
     </>
   );
 }
