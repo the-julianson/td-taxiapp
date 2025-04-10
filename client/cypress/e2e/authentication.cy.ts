@@ -26,23 +26,43 @@ describe('Authentication', function () {
     cy.hash().should('eq', '#/');
     cy.get('button').contains('Log out');
   });
+
   it('Can sign up.', function () {
+    // new
+    cy.intercept('POST', 'sign_up', {
+      statusCode: 201,
+      body: {
+        id: 1,
+        username: 'gary.cole@example.com',
+        first_name: 'Gary',
+        last_name: 'Cole',
+        group: 'driver',
+        photo: '/media/images/photo.jpg',
+      },
+    }).as('signUp');
+
     cy.visit('/#/sign-up');
     cy.get('input#username').type('gary.cole@example.com');
     cy.get('input#firstName').type('Gary');
     cy.get('input#lastName').type('Cole');
     cy.get('input#password').type('pAssw0rd', { log: false });
     cy.get('select#group').select('driver');
+
+    // Handle file upload
     cy.get('input#photo').attachFile('images/photo.jpg');
+
     cy.get('button').contains('Sign up').click();
+    cy.wait('@signUp'); // new
     cy.hash().should('eq', '#/log-in');
   });
+
   it('Cannot visit the login page when logged in.', function () {
     logIn();
 
     cy.visit('/#/log-in');
     cy.hash().should('eq', '#/');
   });
+
   it('Cannot visit the sign up page when logged in.', function () {
     logIn();
 
@@ -56,6 +76,7 @@ describe('Authentication', function () {
     cy.get('[data-cy="signUp"]').should('not.exist');
     cy.get('[data-cy="logIn"]').should('not.exist');
   });
+
   it('Shows an alert on login error.', function () {
     const { username, password } = Cypress.env('credentials');
     cy.intercept('POST', 'log_in', {
@@ -78,6 +99,7 @@ describe('Authentication', function () {
     );
     cy.hash().should('eq', '#/log-in');
   });
+
   it('Can log out.', function () {
     logIn();
     cy.get('[data-cy="logOut"]')
